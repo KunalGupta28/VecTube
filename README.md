@@ -7,6 +7,7 @@ VecTube is a production-grade, AI-powered YouTube video summarizer and Q&A assis
 The system features two frontends that connect to the core Python backend engine:
 
 1. **Chrome Extension (Recommended)**: Integrates directly into `youtube.com` watch pages with a floating Action Button (FAB) that triggers a native Side Panel UI for chat and summary.
+
    <img src="docs/images/extension.png" alt="Extension" width="400" />
 
    <img src="docs/images/extension-chat.png" alt="Extension Side Panel" width="400" />
