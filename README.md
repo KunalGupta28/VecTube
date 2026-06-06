@@ -7,14 +7,13 @@ VecTube is a production-grade, AI-powered YouTube video summarizer and Q&A assis
 The system features two frontends that connect to the core Python backend engine:
 
 1. **Chrome Extension (Recommended)**: Integrates directly into `youtube.com` watch pages with a floating Action Button (FAB) that triggers a native Side Panel UI for chat and summary.
-   
+   <img src="docs/images/extension.png" alt="Extension" width="400" />
+
    <img src="docs/images/extension-chat.png" alt="Extension Side Panel" width="400" />
 
 2. **Web Application**: A standalone Nuxt.js dashboard for managing and analyzing processed videos.
 
    <img src="docs/images/dashboard.png" alt="Web Dashboard View" width="800" />
-   <br/>
-   <img src="docs/images/dashboard-grid.png" alt="Web Dashboard Grid" width="400" />
 
 ---
 
@@ -28,61 +27,6 @@ The project consists of three core components communicating via REST APIs:
 ### Data Flow & System Diagram
 
 ![VecTube System Architecture](docs/images/architecture.jpg)
-
-```mermaid
-graph TD
-    %% Extension Components
-    subgraph "Chrome Extension (MV3)"
-        CS["Content Script: content/index.js"]
-        SW["Background Service Worker: background/index.js"]
-        Popup["Popup App: PopupApp.vue"]
-        SP["Side Panel App: SidePanelApp.vue"]
-    end
-
-    %% Web UI
-    Web["Web UI Frontend: NuxtJS / DaisyUI"]
-
-    %% Backend Components
-    subgraph "AskTube Backend (VecTube Engine)"
-        Sanic["Sanic Server: server.py"]
-        VideoSvc["Video Service: video_service.py"]
-        ChatSvc["ChatService: chat_service.py"]
-        YTSvc["YouTube Service: youtube_service.py"]
-        AudioProc["Audio Processor: audio_processor.py"]
-    end
-
-    %% DB & AI Layer
-    subgraph "Storage & AI Layer"
-        SQLite[("SQLite Database")]
-        Chroma[("ChromaDB Vector Store")]
-        LLM["LLM/Embedding Providers: Gemini, OpenAI, Claude, Mistral, Ollama, VoyageAI"]
-        Whisper["Faster-Whisper Local STT"]
-    end
-
-    %% Interactions
-    YouTube["YouTube Watch Page"] -->|Injects FAB| CS
-    CS -->|Clicks FAB| SW
-    SW -->|Opens| SP
-    Popup -->|Clicks Chat| SW
-    SP -->|Fetch video details & history| Sanic
-    Web -->|User requests| Sanic
-    
-    Sanic --> YTSvc
-    YTSvc -->|Download & Extract Audio| AudioProc
-    AudioProc -->|Whisper STT| Whisper
-    Whisper -->|Return raw transcript| YTSvc
-    YTSvc -->|Save metadata| SQLite
-    
-    Sanic --> VideoSvc
-    VideoSvc -->|Generate Embeddings| LLM
-    VideoSvc -->|Store Chunks| Chroma
-    
-    Sanic --> ChatSvc
-    ChatSvc -->|Multi-query generation| LLM
-    ChatSvc -->|Query relevant transcript| Chroma
-    ChatSvc -->|Augmented prompt| LLM
-    ChatSvc -->|Save chat history| SQLite
-```
 
 ---
 
