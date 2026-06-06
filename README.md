@@ -5,8 +5,16 @@ VecTube is a production-grade, AI-powered YouTube video summarizer and Q&A assis
 ## 🏃 Demo & Interface
 
 The system features two frontends that connect to the core Python backend engine:
+
 1. **Chrome Extension (Recommended)**: Integrates directly into `youtube.com` watch pages with a floating Action Button (FAB) that triggers a native Side Panel UI for chat and summary.
+   
+   <img src="docs/images/extension-chat.png" alt="Extension Side Panel" width="400" />
+
 2. **Web Application**: A standalone Nuxt.js dashboard for managing and analyzing processed videos.
+
+   <img src="docs/images/dashboard.png" alt="Web Dashboard View" width="800" />
+   <br/>
+   <img src="docs/images/dashboard-grid.png" alt="Web Dashboard Grid" width="400" />
 
 ---
 
@@ -18,6 +26,8 @@ The project consists of three core components communicating via REST APIs:
 3. **AskTube Engine (Backend)**: Built with **Sanic (Python)**, utilizing **Faster-Whisper** for speech-to-text transcription, **Sentence-Transformers** for embedding calculations, **ChromaDB** for vector retrieval, and **SQLite (Peewee)** for relational storage.
 
 ### Data Flow & System Diagram
+
+![VecTube System Architecture](docs/images/architecture.jpg)
 
 ```mermaid
 graph TD
@@ -97,74 +107,69 @@ graph TD
 ## 🚀 Installation & Local Setup
 
 ### Prerequisites
-1. **Python**: Python 3.10 or 3.11 installed.
-2. **Poetry**: Python dependency manager.
-3. **Node.js & npm**: Node runtime.
-4. **ffmpeg**: Required for local audio extraction (used by Whisper).
-   - *Windows*: Download from [ffmpeg.org](https://www.ffmpeg.org/download.html) and add to system Path environment variable.
-   - *macOS*: Run `brew install ffmpeg`.
-   - *Linux*: Run `sudo apt install ffmpeg` or `sudo dnf install ffmpeg`.
+- **Python**: 3.10 or 3.11 with **Poetry** installed.
+- **Node.js & npm**: Modern Node runtime (v18+).
+- **ffmpeg**: Required for local audio extraction.
+   - *Windows*: Download from [ffmpeg.org](https://www.ffmpeg.org/download.html) and add to system PATH.
+   - *macOS*: `brew install ffmpeg`
+   - *Linux*: `sudo apt install ffmpeg`
 
 ---
 
 ### Step 1: Run the Backend Engine
+The Python engine powers both the extension and the web app.
 
-1. Navigate to the engine directory:
-   ```shell
-   cd VecTube/engine
-   ```
-2. Copy the sample environment file to configuration:
-   ```shell
-   copy .env.sample .env
-   ```
-3. Open `.env` and fill in your AI provider API keys (e.g., `VT_GEMINI_API_KEY`, `VT_OPENAI_API_KEY`, etc.). For running locally, make sure Ollama is installed and running (`ollama run qwen2`).
-4. Install Python dependencies and launch the server:
-   ```shell
-   poetry install
-   poetry run python engine/server.py
-   ```
-   *The backend will run on port `http://0.0.0.0:8000`.*
+```shell
+# Navigate to the engine directory
+cd VecTube/engine
 
----
+# Set up your environment file
+copy .env.sample .env
+# Edit .env and add your AI API Keys (e.g. VT_GEMINI_API_KEY)
 
-### Step 2: Build & Load the Chrome Extension
-
-1. Navigate to the extension directory:
-   ```shell
-   cd vectube-extension
-   ```
-2. Install dependencies:
-   ```shell
-   npm install
-   ```
-3. Compile the production package:
-   ```shell
-   npm run build
-   ```
-4. Load the unpacked extension in Google Chrome:
-   - Navigate to `chrome://extensions/`.
-   - Toggle **Developer mode** in the top-right corner.
-   - Click **Load unpacked** in the top-left corner.
-   - Select the `vectube-extension/dist` folder.
+# Install dependencies and start the server
+poetry install
+poetry run python engine/server.py
+```
+> The backend will now be running on `http://localhost:8000`. Keep this terminal window open.
 
 ---
 
-### Step 3: Run the Nuxt Web App (Optional)
+### Step 2: Run the Web Application Dashboard
+The web app is a Nuxt.js frontend to manage your processed videos.
 
-1. Navigate to the web directory:
-   ```shell
-   cd VecTube/web
-   ```
-2. Copy the sample environment file:
-   ```shell
-   copy .env.sample .env
-   ```
-3. Install dependencies and run in development mode:
-   ```shell
-   npm install
-   npm run dev
-   ```
-   *The Web application dashboard will run on `http://localhost:3000`.*
+```shell
+# Open a new terminal and navigate to the web directory
+cd VecTube/web
+
+# Set up your environment file
+copy .env.sample .env
+
+# Install dependencies and start the dev server
+npm install
+npm run dev
+```
+> The web app will be available at `http://localhost:3000`. 
+
+---
+
+### Step 3: Build & Install the Chrome Extension
+The extension integrates directly into YouTube watch pages.
+
+```shell
+# Open a new terminal and navigate to the extension directory
+cd vectube-extension
+
+# Install dependencies and build the extension
+npm install
+npm run build
+```
+> **To install in Chrome:**
+> 1. Go to `chrome://extensions/`
+> 2. Enable **Developer mode** (top-right corner).
+> 3. Click **Load unpacked** (top-left corner).
+> 4. Select the `vectube-extension/dist` folder.
+> 5. Open any YouTube video and click the floating **VecTube FAB**!
 
 ---
 
@@ -230,8 +235,3 @@ Popup panels in Chrome close instantly when losing focus, terminating all state.
 
 ## 📄 License
 This project is open-source and licensed under the MIT License. See [LICENSE](VecTube/LICENSE) for more details.
-
-## 🤝 Acknowledgements
-Special thanks to:
-* The [pytubefix](https://github.com/JuanBindez/pytubefix) maintainers for active YouTube scraping adjustments.
-* Google Gemini API team for high-throughput free tier developer endpoints.
