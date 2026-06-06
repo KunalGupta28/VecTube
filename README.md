@@ -27,7 +27,7 @@ The project consists of three core components communicating via REST APIs:
 
 ### Data Flow & System Diagram
 
-![VecTube System Architecture](docs/images/Architecture.jpg)
+![VecTube System Architecture](docs/images/architecture.png)
 
 ---
 
