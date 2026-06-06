@@ -1,0 +1,78 @@
+networks:
+  vectube-network:
+    internal: false
+    enable_ipv6: false
+
+volumes:
+  llm-data:
+  engine-data:
+
+services:
+  proxy:
+    image: traefik:2
+    container_name: proxy
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "8080:80"
+      - "8081:8080"
+    command:
+      - "--api.insecure=true"
+      - "--tracing=true"
+      - "--accesslog=true"
+      - "--providers.docker"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.traefik.address=:8080"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.http.tls=false"
+      - "--log.level=DEBUG"
+    networks:
+      - vectube-network
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    volumes:
+      - llm-data:/root/.ollama
+    networks:
+      - vectube-network
+  engine:
+    image: ifelsedotone/vectube-engine:latest
+    container_name: engine
+    restart: unless-stopped
+    environment:
+      - VT_VOYAGEAI_API_KEY=[replace-with-your-voyageai-api-key]
+      - VT_VOYAGEAI_EMBEDDING_MODEL=voyage-large-2
+      - VT_GEMINI_API_KEY=[replace-with-your-gemini-api-key]
+      - VT_OPENAI_API_KEY=[replace-with-your-openai-api-key]
+      - VT_CLAUDE_API_KEY=[replace-with-your-claude-api-key]
+      - VT_LOCAL_WHISPER_MODEL=base
+      - VT_LOCAL_WHISPER_DEVICE=cpu
+    volumes:
+      - engine-data:/var/vectube
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.vectube-engine.loadbalancer.server.port=8000"
+      - "traefik.http.routers.vectube-engine-route.entrypoints=web"
+      - "traefik.http.routers.vectube-engine-route.service=vectube-engine"
+      - "traefik.http.routers.vectube-engine-route.rule=PathPrefix(`/api`)"
+      - "traefik.http.middlewares.vectube-engine-block-management.replacepathregex.regex=^/(.*)"
+      - "traefik.http.middlewares.vectube-engine-block-management.replacepathregex.replacement=/api/$1"
+    networks:
+      - vectube-network
+  web:
+    image: ifelsedotone/vectube-web:latest
+    container_name: web
+    restart: unless-stopped
+    environment:
+      - NUXT_PUBLIC_API_URL=http://localhost:8080
+    networks:
+      - vectube-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.vectube-web.loadbalancer.server.port=3000"
+      - "traefik.http.routers.vectube-web-route.entrypoints=web"
+      - "traefik.http.routers.vectube-web-route.service=vectube-web"
+      - "traefik.http.routers.vectube-web-route.rule=PathPrefix(`/`)"

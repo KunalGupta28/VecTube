@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   VecTube Chrome Extension - Global Styles
+   ============================================================================ */
+
+/* --- Base --- */
+body {
+  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Card body overrides from original --- */
+.card-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding: var(--padding-card, 1rem);
+  gap: 0.5rem;
+}
+
+/* --- Prose (markdown content) --- */
+.prose {
+  color: var(--tw-prose-body);
+  max-width: 100%;
+}
+
+/* --- Chat bubble --- */
+.chat-bubble {
+  position: relative;
+  display: block;
+  width: fit-content;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  max-width: 95%;
+  border-radius: var(--rounded-box, 1rem);
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+}
+
+/* --- Custom scrollbar --- */
+::-webkit-scrollbar-track {
+  border-radius: 20px;
+  width: 0.4rem;
+  background: transparent;
+}
+
+::-webkit-scrollbar {
+  width: 0.4rem;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background-color: rgba(176, 176, 176, 0.15);
+}
+
+:hover::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background-color: rgba(176, 176, 176, 0.6);
+}
+
+/* --- Animations --- */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.25s ease;
+}
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(12px);
+}
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(-12px);
+}
+
+/* --- Server status indicator --- */
+.server-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.status-dot.online {
+  background-color: #22c55e;
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+}
+
+.status-dot.offline {
+  background-color: #ef4444;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
+  animation: none;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

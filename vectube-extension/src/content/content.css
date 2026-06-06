@@ -1,0 +1,49 @@
+/* ============================================================================
+   VecTube Chrome Extension - Content Script Styles
+   Styles for the floating action button injected into YouTube pages.
+   Uses !important and unique IDs to avoid conflicts with YouTube's CSS.
+   ============================================================================ */
+
+#vectube-fab {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 99999 !important;
+  cursor: pointer !important;
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+#vectube-fab:hover {
+  transform: scale(1.08) !important;
+}
+
+#vectube-fab:active {
+  transform: scale(0.96) !important;
+}
+
+.vectube-fab-inner {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 12px 20px !important;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%) !important;
+  color: #ffffff !important;
+  border-radius: 50px !important;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  transition: box-shadow 0.2s ease !important;
+  user-select: none !important;
+}
+
+#vectube-fab:hover .vectube-fab-inner {
+  box-shadow: 0 6px 28px rgba(99, 102, 241, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.15) inset !important;
+}
+
+.vectube-fab-inner svg {
+  flex-shrink: 0 !important;
+}
