@@ -179,4 +179,4 @@ Popup panels in Chrome close instantly when losing focus, terminating all state.
 ---
 
 ## 📄 License
-This project is open-source and licensed under the MIT License. See [LICENSE](VecTube/LICENSE) for more details.
+This project is open-source and licensed under the MIT License. See [LICENSE](LICENSE) for more details.
